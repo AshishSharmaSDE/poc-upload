@@ -8,7 +8,7 @@
   <div class="content-container">
     <div class="header">
       <h2 class="">Docki Auditor</h2>
-      <button mat-raised-button color="primary" class="upload-button">
+      <button mat-stroked-button color="warn" class="upload-button">
         Upload Document
       </button>
     </div>
@@ -39,7 +39,13 @@
           ></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
+        <div>
+          <button mat-raised-button color="warn" class="upload-button">
+            Initialising Process
+          </button>
+        </div>
       </div>
+
       <!-- Table Section -->
       <table
         mat-table
@@ -82,7 +88,30 @@
         <ng-container matColumnDef="contract">
           <th mat-header-cell *matHeaderCellDef>Contract</th>
           <td mat-cell *matCellDef="let element">
-            <span>{{ element.contract }}</span>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+              "
+            >
+              <span *ngIf="!element.isEditing">{{ element.contract }}</span>
+              <mat-form-field *ngIf="element.isEditing" appearance="outline">
+                <input
+                  matInput
+                  [(ngModel)]="element.contract"
+                  (keydown.enter)="saveContract(element)"
+                  (blur)="saveContract(element)"
+                />
+              </mat-form-field>
+              <button
+                mat-icon-button
+                (click)="toggleEdit(element)"
+                [color]="element.isEditing ? 'primary' : 'default'"
+              >
+                <mat-icon>{{ element.isEditing ? "check" : "edit" }}</mat-icon>
+              </button>
+            </div>
           </td>
         </ng-container>
 
@@ -90,12 +119,23 @@
         <ng-container matColumnDef="action">
           <th mat-header-cell *matHeaderCellDef>Action</th>
           <td mat-cell *matCellDef="let element">
-            <button mat-icon-button>
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button mat-icon-button>
+            <button mat-icon-button [matMenuTriggerFor]="menu">
               <mat-icon>more_vert</mat-icon>
             </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="onProcess(element)">
+                <mat-icon>play_circle</mat-icon>
+                <span>Process</span>
+              </button>
+              <button mat-menu-item (click)="onCopy(element)">
+                <mat-icon>content_copy</mat-icon>
+                <span>Copy</span>
+              </button>
+              <button mat-menu-item (click)="onDelete(element)">
+                <mat-icon>delete</mat-icon>
+                <span>Delete</span>
+              </button>
+            </mat-menu>
           </td>
         </ng-container>
 

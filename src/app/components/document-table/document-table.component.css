@@ -46,14 +46,28 @@
 
 .search-section {
   display: flex;
-  gap: 15px;
-  align-items: center;
+  align-items: stretch; /* Ensures all elements stretch to the same height */
+  gap: 16px; /* Space between items */
   justify-content: space-between;
   padding: 10px;
 }
 
+.mat-form-field {
+  flex: 0 1 auto; /* Prevents fields from growing and shrinking, keeping their size based on content */
+  height: 48px; /* Adjust to match button size */
+  display: flex;
+  align-items: center; /* Vertically centers input */
+  justify-content: center;
+}
+
+.mat-form-field input,
+.mat-form-field mat-select {
+  height: 36px; /* Adjusts the height of the input/select to match the button */
+}
+
 .upload-button {
-  height: 40px;
+  height: 48px; /* Match the button height with the form fields */
+  align-self: center; /* Keeps the button vertically centered */
 }
 
 .custom-table {
@@ -83,9 +97,4 @@
 
 .status.not-started {
   color: red;
-}
-.search-field,
-.date-field,
-.filter-field {
-  align-items: center;
 }

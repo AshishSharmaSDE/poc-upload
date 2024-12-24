@@ -13,6 +13,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { DatePipe, LowerCasePipe } from '@angular/common';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatMenuModule } from '@angular/material/menu';
 @Component({
   selector: 'app-document-table',
   templateUrl: './document-table.component.html',
@@ -34,6 +35,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     LowerCasePipe,
     DatePipe,
     MatNativeDateModule,
+    MatMenuModule,
   ],
 })
 export class DocumentTableComponent {
@@ -82,4 +84,23 @@ export class DocumentTableComponent {
       contract: 'Gamma Support',
     },
   ];
+  onProcess(element: any) {
+    console.log('Process clicked for:', element);
+  }
+
+  onCopy(element: any) {
+    console.log('Copy clicked for:', element);
+  }
+
+  onDelete(element: any) {
+    console.log('Delete clicked for:', element);
+  }
+  toggleEdit(element: any) {
+    element.isEditing = !element.isEditing;
+  }
+
+  saveContract(element: any) {
+    element.isEditing = false;
+    console.log('Updated contract value:', element.contract);
+  }
 }
