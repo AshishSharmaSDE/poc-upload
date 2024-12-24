@@ -84,17 +84,25 @@
 }
 
 .status {
-  text-transform: capitalize;
+  padding: 4px 8px;
+  border-radius: 4px; /* Rounded corners for the border */
+  font-weight: bold;
+  display: inline-block;
+  text-align: center;
 }
 
+/* Define styles for each audit status */
 .status.completed {
-  color: green;
+  color: #4caf50; /* Green text */
+  border: 2px solid #4caf50; /* Green border */
 }
 
 .status.in-progress {
-  color: orange;
+  color: #ff9800; /* Orange text */
+  border: 2px solid #ff9800; /* Orange border */
 }
 
 .status.not-started {
-  color: red;
+  color: #f44336; /* Red text */
+  border: 2px solid #f44336; /* Red border */
 }

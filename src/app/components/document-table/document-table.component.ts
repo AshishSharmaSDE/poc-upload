@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,6 +14,12 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { DatePipe, LowerCasePipe } from '@angular/common';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatMenuModule } from '@angular/material/menu';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialog } from '@angular/material/dialog';
+import { UploadDialogComponent } from '../../upload-dialog/upload-dialog.component';
+import { DocumentService, Document } from '../../document.service';
 @Component({
   selector: 'app-document-table',
   templateUrl: './document-table.component.html',
@@ -36,10 +42,14 @@ import { MatMenuModule } from '@angular/material/menu';
     DatePipe,
     MatNativeDateModule,
     MatMenuModule,
+    FormsModule,
+    CommonModule,
+    MatCheckboxModule,
   ],
 })
-export class DocumentTableComponent {
+export class DocumentTableComponent implements OnInit {
   displayedColumns: string[] = [
+    'select',
     'documentName',
     'auditStatus',
     'vendorName',
@@ -47,60 +57,87 @@ export class DocumentTableComponent {
     'contract',
     'action',
   ];
-  dataSource = [
-    {
-      documentName: 'Sample.pdf',
-      auditStatus: 'Completed',
-      vendorName: 'Tech Supplies Inc',
-      createdOn: new Date('2024-01-15'),
-      contract: 'Alpha Agreement',
-    },
-    {
-      documentName: 'Invoice.pdf',
-      auditStatus: 'Completed',
-      vendorName: 'Prime Logistics Co.',
-      createdOn: new Date('2024-02-28'),
-      contract: 'Beta Partnership',
-    },
-    {
-      documentName: 'Invoice2.pdf',
-      auditStatus: 'Completed',
-      vendorName: 'Greenfield Enterprises',
-      createdOn: new Date('2024-03-10'),
-      contract: 'Beta Partnership',
-    },
-    {
-      documentName: 'Sample.pdf',
-      auditStatus: 'In-progress',
-      vendorName: 'Advanced Tech LLC',
-      createdOn: new Date('2024-04-05'),
-      contract: 'Beta Partnership',
-    },
-    {
-      documentName: 'Invoice.docx',
-      auditStatus: 'Not-started',
-      vendorName: 'Elite Enterprises',
-      createdOn: new Date('2024-05-19'),
-      contract: 'Gamma Support',
-    },
-  ];
-  onProcess(element: any) {
-    console.log('Process clicked for:', element);
+  dataSource: Document[] = [];
+  selection = new Set<Document>();
+
+  constructor(
+    private dialog: MatDialog,
+    private documentService: DocumentService
+  ) {}
+
+  ngOnInit(): void {
+    this.fetchDocuments();
   }
 
-  onCopy(element: any) {
-    console.log('Copy clicked for:', element);
+  fetchDocuments() {
+    this.documentService.getDocuments().subscribe((documents) => {
+      this.dataSource = documents.map((doc) => ({ ...doc, isEditing: false }));
+    });
   }
 
-  onDelete(element: any) {
-    console.log('Delete clicked for:', element);
-  }
-  toggleEdit(element: any) {
-    element.isEditing = !element.isEditing;
+  onProcess(document: Document) {
+    this.documentService.processDocument(document).subscribe((message) => {
+      console.log(message);
+    });
   }
 
-  saveContract(element: any) {
-    element.isEditing = false;
-    console.log('Updated contract value:', element.contract);
+  onCopy(document: Document) {
+    this.documentService.copyDocument(document).subscribe((message) => {
+      console.log(message);
+    });
+  }
+
+  onDelete(document: Document) {
+    this.documentService.deleteDocument(document).subscribe((message) => {
+      console.log(message);
+      this.dataSource = this.dataSource.filter((doc) => doc !== document);
+    });
+  }
+
+  toggleEdit(document: Document) {
+    if (document.isEditing !== undefined) {
+      document.isEditing = !document.isEditing;
+    }
+  }
+
+  saveContract(document: Document) {
+    document['isEditing'] = false;
+    this.documentService.updateDocument(document).subscribe((message) => {
+      console.log(message);
+    });
+  }
+
+  toggleRowSelection(document: Document) {
+    if (this.selection.has(document)) {
+      this.selection.delete(document);
+    } else {
+      this.selection.add(document);
+    }
+  }
+
+  toggleAllRows(event: any) {
+    if (event.checked) {
+      this.dataSource.forEach((row) => this.selection.add(row));
+    } else {
+      this.selection.clear();
+    }
+  }
+
+  isAllSelected(): boolean {
+    return (
+      this.selection.size === this.dataSource.length && this.selection.size > 0
+    );
+  }
+
+  isIndeterminate(): boolean {
+    return (
+      this.selection.size > 0 && this.selection.size < this.dataSource.length
+    );
+  }
+
+  openUploadDialog() {
+    this.dialog.open(UploadDialogComponent, {
+      width: '600px',
+    });
   }
 }
