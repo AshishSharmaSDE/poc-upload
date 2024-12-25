@@ -1,51 +1,49 @@
-<h2 mat-dialog-title>Upload Document</h2>
-<div mat-dialog-content>
-  <div
-    class="upload-container"
-    (drop)="onFileDrop($event)"
-    (dragover)="onDragOver($event)"
-  >
-    <p>Drag and drop your file here or</p>
-    <button mat-stroked-button (click)="fileInput.click()">Browse</button>
-    <input type="file" #fileInput (change)="onFileSelected($event)" hidden />
+<div class="modal-overlay">
+  <div class="upload-container">
+    <!-- Close Button -->
+    <button class="close-button" (click)="closeDialog()">×</button>
+
+    <h3>Upload Your File</h3>
+    <div
+      class="upload-area"
+      matRipple
+      (drop)="onFileDrop($event)"
+      (dragover)="onDragOver($event)"
+      (click)="onUploadAreaClick($event)"
+    >
+      <p>
+        Drag & drop files or
+        <span class="browse-link" (click)="onBrowseClick($event)">
+          Browse
+        </span>
+      </p>
+      <p class="supported-formats">
+        Supported formats: JPEG, PNG, GIF, MP4, PDF, PSD, AI, Word, PPT
+      </p>
+    </div>
+    <input
+      #fileInput
+      type="file"
+      multiple
+      (change)="onFilesSelected($event)"
+      style="display: none"
+    />
+
+    <table *ngIf="files.length > 0" class="file-table">
+      <thead>
+        <tr>
+          <th>File Name</th>
+          <th>Size</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let file of files">
+          <td>{{ file.name }}</td>
+          <td>{{ (file.size / 1024 / 1024).toFixed(2) }} MB</td>
+          <td>{{ file.status }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-
-  <table mat-table [dataSource]="files" class="mat-elevation-z8">
-    <!-- File Name Column -->
-    <ng-container matColumnDef="fileName">
-      <th mat-header-cell *matHeaderCellDef>File Name</th>
-      <td mat-cell *matCellDef="let file">{{ file.name }}</td>
-    </ng-container>
-
-    <!-- File Size Column -->
-    <ng-container matColumnDef="fileSize">
-      <th mat-header-cell *matHeaderCellDef>File Size</th>
-      <td mat-cell *matCellDef="let file">{{ file.size | fileSize }}</td>
-    </ng-container>
-
-    <!-- Status Column -->
-    <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef>Status</th>
-      <td mat-cell *matCellDef="let file">{{ file.status }}</td>
-    </ng-container>
-
-    <!-- Action Column -->
-    <ng-container matColumnDef="action">
-      <th mat-header-cell *matHeaderCellDef>Action</th>
-      <td mat-cell *matCellDef="let file">
-        <button mat-icon-button (click)="removeFile(file)">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
-</div>
-<div mat-dialog-actions align="end">
-  <button mat-stroked-button mat-dialog-close>Cancel</button>
-  <button mat-raised-button color="primary" (click)="uploadFiles()">
-    Upload
-  </button>
 </div>

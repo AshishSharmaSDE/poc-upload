@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { FileUploadService } from './file-upload.service';
 
 export interface Document {
   documentName: string;
@@ -18,7 +18,10 @@ export interface Document {
 export class DocumentService {
   private dataUrl = 'assets/data.json'; // Path to the JSON file
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private fileUploadService: FileUploadService
+  ) {}
 
   // Fetch all documents
   getDocuments(): Observable<Document[]> {

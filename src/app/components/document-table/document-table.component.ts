@@ -20,6 +20,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { UploadDialogComponent } from '../../upload-dialog/upload-dialog.component';
 import { DocumentService, Document } from '../../document.service';
+import { FileUploadService } from '../../file-upload.service';
 @Component({
   selector: 'app-document-table',
   templateUrl: './document-table.component.html',
@@ -62,7 +63,8 @@ export class DocumentTableComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private documentService: DocumentService
+    private documentService: DocumentService,
+    private fileUploadService: FileUploadService
   ) {}
 
   ngOnInit(): void {
@@ -70,6 +72,10 @@ export class DocumentTableComponent implements OnInit {
   }
 
   fetchDocuments() {
+    // Subscribe to the file upload service to get the latest uploaded files
+    this.fileUploadService.files$.subscribe((documents) => {
+      this.dataSource = documents.map((doc) => ({ ...doc, isEditing: false })); // Update the table whenever files change
+    });
     this.documentService.getDocuments().subscribe((documents) => {
       this.dataSource = documents.map((doc) => ({ ...doc, isEditing: false }));
     });

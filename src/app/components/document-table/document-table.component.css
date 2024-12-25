@@ -92,17 +92,20 @@
 }
 
 /* Define styles for each audit status */
-.status.completed {
+.status.completed,
+.status.uploaded {
   color: #4caf50; /* Green text */
   border: 2px solid #4caf50; /* Green border */
 }
 
-.status.in-progress {
+.status.in-progress,
+.status.uploading {
   color: #ff9800; /* Orange text */
   border: 2px solid #ff9800; /* Orange border */
 }
 
-.status.not-started {
+.status.not-started,
+.status.failed {
   color: #f44336; /* Red text */
   border: 2px solid #f44336; /* Red border */
 }
