@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { DocumentTableComponent } from './components/document-table/document-table.component';
+import { DocumentTableComponent } from './document-table/document-table.component';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

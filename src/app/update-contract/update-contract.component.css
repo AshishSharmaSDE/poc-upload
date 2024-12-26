@@ -1,0 +1,44 @@
+.update-contract-dialog {
+  /* width: 400px; */
+  padding: 16px;
+  font-family: Arial, sans-serif;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.dialog-header h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.close-button {
+  cursor: pointer;
+  font-size: 20px;
+  background: transparent;
+  border: none;
+}
+
+.dialog-body {
+  margin-bottom: 16px;
+}
+
+.search-field {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+mat-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+}

@@ -1,9 +1,4 @@
 <div class="main-container">
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <h3>Invoice</h3>
-  </div>
-
   <!-- Main Content -->
   <div class="content-container">
     <div class="header">
@@ -20,14 +15,24 @@
     <!-- Header Section -->
     <div class="main-header">
       <div class="mat-elevation-z8 search-section">
+        <!-- Search Field -->
         <mat-form-field class="search-field" appearance="outline">
           <mat-label>Search by</mat-label>
-          <input matInput placeholder="File name" />
+          <input
+            matInput
+            placeholder="File name"
+            [(ngModel)]="searchTerm"
+            (input)="onSearchChange(searchTerm)"
+          />
         </mat-form-field>
 
+        <!-- Status Filter -->
         <mat-form-field class="filter-field" appearance="outline">
           <mat-label>Status</mat-label>
-          <mat-select>
+          <mat-select
+            [(value)]="selectedStatus"
+            (selectionChange)="onStatusChange($event.value)"
+          >
             <mat-option value="all">All</mat-option>
             <mat-option value="completed">Completed</mat-option>
             <mat-option value="in-progress">In Progress</mat-option>
@@ -35,15 +40,23 @@
           </mat-select>
         </mat-form-field>
 
+        <!-- Date Filter -->
         <mat-form-field class="date-field" appearance="outline">
           <mat-label>Date</mat-label>
-          <input matInput [matDatepicker]="picker" />
+          <input
+            matInput
+            [matDatepicker]="picker"
+            [(ngModel)]="selectedDate"
+            (dateChange)="onDateChange($event.value)"
+          />
           <mat-datepicker-toggle
             matSuffix
             [for]="picker"
           ></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
+
+        <!-- Button -->
         <div>
           <button mat-raised-button color="warn" class="upload-button">
             Initialising Process
@@ -118,21 +131,9 @@
                 align-items: center;
               "
             >
-              <span *ngIf="!element.isEditing">{{ element.contract }}</span>
-              <mat-form-field *ngIf="element.isEditing" appearance="outline">
-                <input
-                  matInput
-                  [(ngModel)]="element.contract"
-                  (keydown.enter)="saveContract(element)"
-                  (blur)="saveContract(element)"
-                />
-              </mat-form-field>
-              <button
-                mat-icon-button
-                (click)="toggleEdit(element)"
-                [color]="element.isEditing ? 'primary' : 'default'"
-              >
-                <mat-icon>{{ element.isEditing ? "check" : "edit" }}</mat-icon>
+              <span>{{ element.contract }}</span>
+              <button mat-icon-button (click)="openContractDialog(element)">
+                <mat-icon>edit</mat-icon>
               </button>
             </div>
           </td>
