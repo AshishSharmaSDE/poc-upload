@@ -3,12 +3,11 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatListModule } from '@angular/material/list';
-import { DocumentService } from '../document.service';
+import { DocumentService } from '../service/document.service';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { Location } from '@angular/common';
 import { MatDialogRef } from '@angular/material/dialog';
-import { FileUploadService } from '../file-upload.service';
+import { FileUploadService } from '../service/file-upload.service';
 
 @Component({
   selector: 'app-upload-dialog',

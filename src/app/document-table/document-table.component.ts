@@ -19,8 +19,8 @@ import { CommonModule } from '@angular/common';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { UploadDialogComponent } from '../upload-dialog/upload-dialog.component';
-import { DocumentService, Document } from '../document.service';
-import { FileUploadService } from '../file-upload.service';
+import { DocumentService, Document } from '../service/document.service';
+import { FileUploadService } from '../service/file-upload.service';
 import { UpdateContractComponent } from '../update-contract/update-contract.component';
 @Component({
   selector: 'app-document-table',
