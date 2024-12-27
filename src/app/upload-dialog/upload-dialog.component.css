@@ -13,7 +13,7 @@
 
 .upload-container {
   position: relative;
-  width: 450px;
+  width: 50%;
   background: #fff;
   border-radius: 8px;
   padding: 20px;
@@ -62,9 +62,8 @@
 }
 
 .file-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
+  width: 100%; /* Ensure the table spans the container width */
+  border-collapse: collapse; /* Remove extra spacing between table cells */
 }
 
 .file-table th,
@@ -76,4 +75,16 @@
 
 .file-table th {
   background-color: #f9f9f9;
+}
+.file-table thead th {
+  position: sticky; /* Keeps the header fixed when scrolling */
+  top: 0;
+  background-color: #f1f1f1; /* Background color for the sticky header */
+  z-index: 1; /* Ensures the header stays on top */
+}
+.table-container {
+  max-height: 400px; /* Set the maximum height for the container */
+  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-x: auto; /* Enable horizontal scrolling if needed */
+  border: 1px solid #ccc; /* Optional: Add a border for better visibility */
 }

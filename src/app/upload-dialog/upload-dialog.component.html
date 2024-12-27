@@ -2,7 +2,6 @@
   <div class="upload-container">
     <!-- Close Button -->
     <button class="close-button" (click)="closeDialog()">×</button>
-
     <h3>Upload Your File</h3>
     <div
       class="upload-area"
@@ -29,21 +28,23 @@
       style="display: none"
     />
 
-    <table *ngIf="files.length > 0" class="mat-elevation-z8 file-table">
-      <thead>
-        <tr>
-          <th>File Name</th>
-          <th>Size</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let file of files">
-          <td>{{ file.name }}</td>
-          <td>{{ (file.size / 1024 / 1024).toFixed(2) }} MB</td>
-          <td>{{ file.status }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-container">
+      <table *ngIf="files.length > 0" class="mat-elevation-z8 file-table">
+        <thead>
+          <tr>
+            <th>File Name</th>
+            <th>Size</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let file of files">
+            <td>{{ file.name }}</td>
+            <td>{{ (file.size / 1024 / 1024).toFixed(2) }} MB</td>
+            <td>{{ file.status }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

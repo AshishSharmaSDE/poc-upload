@@ -235,4 +235,8 @@ export class DocumentTableComponent implements OnInit {
     this.selectedDate = date;
     this.applyFilters();
   }
+  onFileClick(document: Document) {
+    console.log(document);
+    // add href logic
+  }
 }

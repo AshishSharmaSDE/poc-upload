@@ -1,29 +1,28 @@
-<div class="update-contract-dialog">
-  <div class="dialog-header">
+<div class="modal-overlay">
+  <div class="update-contract-dialog">
+    <button class="close-button" (click)="onCancel()">×</button>
     <h3>Contracts</h3>
-    <button mat-icon-button class="close-button" (click)="onCancel()">×</button>
-  </div>
+    <div class="dialog-body">
+      <mat-form-field appearance="outline" class="search-field">
+        <input
+          matInput
+          placeholder="Search Contracts..."
+          [(ngModel)]="searchTerm"
+        />
+      </mat-form-field>
 
-  <div class="dialog-body">
-    <mat-form-field appearance="outline" class="search-field">
-      <input
-        matInput
-        placeholder="Search Contracts..."
-        [(ngModel)]="searchTerm"
-      />
-    </mat-form-field>
+      <mat-radio-group [(ngModel)]="selectedContract">
+        <mat-radio-button
+          *ngFor="let contract of filteredContracts"
+          [value]="contract"
+        >
+          {{ contract }}
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
 
-    <mat-radio-group [(ngModel)]="selectedContract">
-      <mat-radio-button
-        *ngFor="let contract of filteredContracts"
-        [value]="contract"
-      >
-        {{ contract }}
-      </mat-radio-button>
-    </mat-radio-group>
-  </div>
-
-  <div class="dialog-footer">
-    <button mat-button color="primary" (click)="onSave()">Continue</button>
+    <div class="dialog-footer">
+      <button mat-button color="primary" (click)="onSave()">Continue</button>
+    </div>
   </div>
 </div>

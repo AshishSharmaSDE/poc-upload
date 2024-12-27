@@ -1,171 +1,198 @@
 <div class="main-container">
   <!-- Main Content -->
   <div class="content-container">
-    <div class="header">
-      <h2 class="">Docki Auditor</h2>
+    <div class="main-header">
       <button
         mat-stroked-button
         color="warn"
-        class="upload-button"
+        class="upload-button-one"
         (click)="openUploadDialog()"
       >
         Upload Document
       </button>
     </div>
-    <!-- Header Section -->
-    <div class="main-header">
-      <div class="mat-elevation-z8 search-section">
-        <!-- Search Field -->
-        <mat-form-field class="search-field" appearance="outline">
-          <mat-label>Search by</mat-label>
-          <input
-            matInput
-            placeholder="File name"
-            [(ngModel)]="searchTerm"
-            (input)="onSearchChange(searchTerm)"
-          />
-        </mat-form-field>
+    <!-- body Section -->
+    <div class="main-body">
+      <div class="search-section">
+        <div class="form-fields-container">
+          <!-- Search Field -->
+          <mat-form-field class="search-field" appearance="outline">
+            <mat-label>Search by</mat-label>
+            <input
+              matInput
+              placeholder="File name"
+              [(ngModel)]="searchTerm"
+              (input)="onSearchChange(searchTerm)"
+            />
+          </mat-form-field>
 
-        <!-- Status Filter -->
-        <mat-form-field class="filter-field" appearance="outline">
-          <mat-label>Status</mat-label>
-          <mat-select
-            [(value)]="selectedStatus"
-            (selectionChange)="onStatusChange($event.value)"
-          >
-            <mat-option value="all">All</mat-option>
-            <mat-option value="completed">Completed</mat-option>
-            <mat-option value="in-progress">In Progress</mat-option>
-            <mat-option value="not-started">Not Started</mat-option>
-          </mat-select>
-        </mat-form-field>
+          <!-- Status Filter -->
+          <mat-form-field class="filter-field" appearance="outline">
+            <mat-label>Status</mat-label>
+            <mat-select
+              [(value)]="selectedStatus"
+              (selectionChange)="onStatusChange($event.value)"
+            >
+              <mat-option value="all">All</mat-option>
+              <mat-option value="completed">Completed</mat-option>
+              <mat-option value="in-progress">In Progress</mat-option>
+              <mat-option value="not-started">Not Started</mat-option>
+            </mat-select>
+          </mat-form-field>
 
-        <!-- Date Filter -->
-        <mat-form-field class="date-field" appearance="outline">
-          <mat-label>Date</mat-label>
-          <input
-            matInput
-            [matDatepicker]="picker"
-            [(ngModel)]="selectedDate"
-            (dateChange)="onDateChange($event.value)"
-          />
-          <mat-datepicker-toggle
-            matSuffix
-            [for]="picker"
-          ></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
+          <!-- Date Filter -->
+          <mat-form-field class="date-field" appearance="outline">
+            <mat-label>Date</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              [(ngModel)]="selectedDate"
+              (dateChange)="onDateChange($event.value)"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
 
-        <!-- Button -->
-        <div>
+          <!-- Button -->
           <button mat-raised-button color="warn" class="upload-button">
             Initialising Process
           </button>
         </div>
       </div>
 
-      <!-- Table Section -->
-      <table
-        mat-table
-        [dataSource]="dataSource"
-        class="mat-elevation-z8 custom-table"
-        matSort
-      >
-        <!-- Select Column -->
-        <ng-container matColumnDef="select">
-          <th mat-header-cell *matHeaderCellDef>
-            <mat-checkbox
-              [checked]="isAllSelected()"
-              [indeterminate]="isIndeterminate()"
-              (change)="toggleAllRows($event)"
-            ></mat-checkbox>
-          </th>
-          <td mat-cell *matCellDef="let element">
-            <mat-checkbox
-              (change)="toggleRowSelection(element)"
-              [checked]="selection.has(element)"
-            ></mat-checkbox>
-          </td>
-        </ng-container>
+      <div class="table-container">
+        <!-- Table Section -->
+        <table
+          mat-table
+          [dataSource]="dataSource"
+          class="mat-elevation-z8 custom-table"
+          matSort
+        >
+          <!-- Select Column -->
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox
+                [checked]="isAllSelected()"
+                [indeterminate]="isIndeterminate()"
+                (change)="toggleAllRows($event)"
+              ></mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let element">
+              <mat-checkbox
+                (change)="toggleRowSelection(element)"
+                [checked]="selection.has(element)"
+              ></mat-checkbox>
+            </td>
+          </ng-container>
 
-        <!-- Document Name Column -->
-        <ng-container matColumnDef="documentName">
-          <th mat-header-cell *matHeaderCellDef>Document Name</th>
-          <td mat-cell *matCellDef="let element">
-            <a href="#" class="document-link">{{ element.documentName }}</a>
-          </td>
-        </ng-container>
+          <ng-container matColumnDef="documentName">
+            <th mat-header-cell *matHeaderCellDef>Document Name</th>
+            <td mat-cell *matCellDef="let element">
+              <a
+                [href]="
+                  element.auditStatus === 'Completed' ||
+                  element.auditStatus === 'In-progress'
+                    ? '#'
+                    : null
+                "
+                [ngClass]="{
+                  'disabled-link':
+                    element.auditStatus !== 'Completed' &&
+                    element.auditStatus !== 'In-progress'
+                }"
+                (click)="
+                  element.auditStatus === 'Completed' ||
+                  element.auditStatus === 'In-progress'
+                    ? onFileClick(element)
+                    : $event.preventDefault()
+                "
+              >
+                {{ element.documentName }}
+              </a>
+            </td>
+          </ng-container>
 
-        <!-- Audit Status Column -->
-        <ng-container matColumnDef="auditStatus">
-          <th mat-header-cell *matHeaderCellDef>Audit Status</th>
-          <td mat-cell *matCellDef="let element">
-            <span class="status" [ngClass]="element.auditStatus | lowercase">
-              {{ element.auditStatus }}
-            </span>
-          </td>
-        </ng-container>
+          <!-- Audit Status Column -->
+          <ng-container matColumnDef="auditStatus">
+            <th mat-header-cell *matHeaderCellDef>Audit Status</th>
+            <td mat-cell *matCellDef="let element">
+              <span class="status" [ngClass]="element.auditStatus | lowercase">
+                {{ element.auditStatus }}
+              </span>
+            </td>
+          </ng-container>
 
-        <!-- Vendor Name Column -->
-        <ng-container matColumnDef="vendorName">
-          <th mat-header-cell *matHeaderCellDef>Vendor Name</th>
-          <td mat-cell *matCellDef="let element">{{ element.vendorName }}</td>
-        </ng-container>
+          <!-- Vendor Name Column -->
+          <ng-container matColumnDef="vendorName">
+            <th mat-header-cell *matHeaderCellDef>Vendor Name</th>
+            <td mat-cell *matCellDef="let element">{{ element.vendorName }}</td>
+          </ng-container>
 
-        <!-- Created On Column -->
-        <ng-container matColumnDef="createdOn">
-          <th mat-header-cell *matHeaderCellDef>Created On</th>
-          <td mat-cell *matCellDef="let element">
-            {{ element.createdOn | date }}
-          </td>
-        </ng-container>
+          <!-- Created On Column -->
+          <ng-container matColumnDef="createdOn">
+            <th mat-header-cell *matHeaderCellDef>Created On</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.createdOn | date }}
+            </td>
+          </ng-container>
 
-        <!-- Contract Column -->
-        <ng-container matColumnDef="contract">
-          <th mat-header-cell *matHeaderCellDef>Contract</th>
-          <td mat-cell *matCellDef="let element">
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-              "
-            >
-              <span>{{ element.contract }}</span>
-              <button mat-icon-button (click)="openContractDialog(element)">
-                <mat-icon>edit</mat-icon>
+          <!-- Contract Column -->
+          <ng-container matColumnDef="contract">
+            <th mat-header-cell *matHeaderCellDef>Contract</th>
+            <td mat-cell *matCellDef="let element">
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                "
+              >
+                <span>{{ element.contract }}</span>
+                <button
+                  mat-icon-button
+                  [disabled]="
+                    element.auditStatus === 'Completed' ||
+                    element.auditStatus === 'In-progress'
+                  "
+                  (click)="openContractDialog(element)"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Action Column -->
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef>Action</th>
+            <td mat-cell *matCellDef="let element">
+              <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
               </button>
-            </div>
-          </td>
-        </ng-container>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="onProcess(element)">
+                  <mat-icon>play_circle</mat-icon>
+                  <span>Process</span>
+                </button>
+                <button mat-menu-item (click)="onCopy(element)">
+                  <mat-icon>content_copy</mat-icon>
+                  <span>Copy</span>
+                </button>
+                <button mat-menu-item (click)="onDelete(element)">
+                  <mat-icon>delete</mat-icon>
+                  <span>Delete</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
 
-        <!-- Action Column -->
-        <ng-container matColumnDef="action">
-          <th mat-header-cell *matHeaderCellDef>Action</th>
-          <td mat-cell *matCellDef="let element">
-            <button mat-icon-button [matMenuTriggerFor]="menu">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-            <mat-menu #menu="matMenu">
-              <button mat-menu-item (click)="onProcess(element)">
-                <mat-icon>play_circle</mat-icon>
-                <span>Process</span>
-              </button>
-              <button mat-menu-item (click)="onCopy(element)">
-                <mat-icon>content_copy</mat-icon>
-                <span>Copy</span>
-              </button>
-              <button mat-menu-item (click)="onDelete(element)">
-                <mat-icon>delete</mat-icon>
-                <span>Delete</span>
-              </button>
-            </mat-menu>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      </table>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
     </div>
   </div>
 </div>
